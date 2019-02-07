@@ -62,7 +62,7 @@ $name = str_slug($form['label'], '');
                                                     <label class="radio-inline">
                                                         <input type="radio" name="child-{{$col['name']}}"
                                                                class='{{ ($e==0 && $col['required'])?"required":""}} {{$name_column}}'
-                                                               value="{{$radio_value}}"> {{$radio_label}}
+                                                               value="{{$radio_value}}"{{ ($e==0 && $col['required'])?" checked":""}}> {{$radio_label}}
                                                     </label>
                                                     <?php endforeach;?>
                                                     <?php endif;?>
@@ -277,7 +277,7 @@ $name = str_slug($form['label'], '');
 
                                                                         if (fk_value != '') {
                                                                             $current.html("<option value=''>{{trans('crudbooster.text_loading')}} {{$col['label']}}");
-                                                                            $.get("{{CRUDBooster::mainpath('data-table')}}?table=" + table + "&label=" + label + "&fk_name=" + fk_name + "&fk_value=" + fk_value + "datatable_where=" + encodeURI(datatableWhere), function (response) {
+                                                                            $.get("{{CRUDBooster::mainpath('data-table')}}?table=" + table + "&label=" + label + "&fk_name=" + fk_name + "&fk_value=" + fk_value + "&datatable_where=" + encodeURI(datatableWhere), function (response) {
                                                                                 if (response) {
                                                                                     $current.html("<option value=''>{{$default}}");
                                                                                     $.each(response, function (i, obj) {
