@@ -21,9 +21,9 @@ class CRUDBooster
         $values = explode(",", $values);
         return implode(", ", DB::table($table)->whereIn($id, $values)->pluck($name)->toArray());
         //implode(", ", DB::table("syudo_list_pokemons_types")->whereIn("id", explode(",", $row->type))->pluck("name")->toArray())
-        
+
     }
-    
+
     public static function uploadBase64($value, $id = null)
     {
         if (! self::myId()) {
@@ -43,13 +43,13 @@ class CRUDBooster
         @$mime_type = $mime_type[1];
         if ($mime_type) {
             $filePath = 'uploads/'.$userID.'/'.date('Y-m');
-		Storage::makeDirectory($filePath);
-		$filename = md5(str_random(5)).'.'.$mime_type;
-		if (Storage::put($filePath.'/'.$filename, $filedata)) {
-		    self::resizeImage($filePath.'/'.$filename);
+            Storage::makeDirectory($filePath);
+            $filename = md5(str_random(5)).'.'.$mime_type;
+            if (Storage::put($filePath.'/'.$filename, $filedata)) {
+                self::resizeImage($filePath.'/'.$filename);
 
-		    return $filePath.'/'.$filename;
-		}
+                return $filePath.'/'.$filename;
+            }
         }
     }
 
@@ -578,7 +578,7 @@ class CRUDBooster
         }
     }
 
-    public static function isColumnNULL($table, $field)
+    public static function isColumnNULL($table, $field, $db = null)
     {
         if (Cache::has('field_isNull_'.$table.'_'.$field)) {
             return Cache::get('field_isNull_'.$table.'_'.$field);
@@ -586,7 +586,11 @@ class CRUDBooster
 
         try {
             //MySQL & SQL Server
-            $isNULL = DB::select(DB::raw("select IS_NULLABLE from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='$table' and COLUMN_NAME = '$field'"))[0]->IS_NULLABLE;
+            if (empty($db)){
+                $db = DB::connecton();
+            }
+
+            $isNULL = $db->select($db->raw("select IS_NULLABLE from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='$table' and COLUMN_NAME = '$field'"))[0]->IS_NULLABLE;
             $isNULL = ($isNULL == 'YES') ? true : false;
             Cache::forever('field_isNull_'.$table.'_'.$field, $isNULL);
         } catch (\Exception $e) {
@@ -890,9 +894,9 @@ class CRUDBooster
         }
     }
 
-    public static function pk($table)
+    public static function pk($table, $db = null)
     {
-        return self::findPrimaryKey($table);
+        return self::findPrimaryKey($table, $db);
     }
 
 //     public static function findPrimaryKey($table)
@@ -921,19 +925,23 @@ class CRUDBooster
 //         }
 //     }
 
-	public static function findPrimaryKey($table)
-	{
-		if(!$table)
-		{
-			return 'id';
-		}
-		
-		$pk = DB::getDoctrineSchemaManager()->listTableDetails($table)->getPrimaryKey();
-		if(!$pk) {
-		    return null;
-		}
-		return $pk->getColumns()[0];	
-	}
+    public static function findPrimaryKey($table, $db = null)
+    {
+        if(!$table)
+        {
+            return 'id';
+        }
+        $schemaManager = DB::getDoctrineSchemaManager();
+        if (!empty($db)){
+            $schemaManager = $db->getDoctrineSchemaManager();
+        }
+
+        $pk = $schemaManager->listTableDetails($table)->getPrimaryKey();
+        if(!$pk) {
+            return null;
+        }
+        return $pk->getColumns()[0];
+    }
 
     public static function newId($table)
     {
@@ -1149,10 +1157,10 @@ class CRUDBooster
                 'useragent' => Request::header('User-Agent'),
             ], [
 
-                    'X-Authorization-Token' => 'required',
-                    'X-Authorization-Time' => 'required',
-                    'useragent' => 'required',
-                ]);
+                'X-Authorization-Token' => 'required',
+                'X-Authorization-Time' => 'required',
+                'useragent' => 'required',
+            ]);
 
             if ($validator->fails()) {
                 $message = $validator->errors()->all();
@@ -1257,11 +1265,14 @@ class CRUDBooster
         return $chresult;
     }
 
-    public static function getTableColumns($table)
+    public static function getTableColumns($table, $db = null)
     {
         //$cols = DB::getSchemaBuilder()->getColumnListing($table);
         $table = CRUDBooster::parseSqlTable($table);
-        $cols = collect(DB::select('SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = :database AND TABLE_NAME = :table', [
+        if (empty($db)){
+            $db = DB::connection();
+        }
+        $cols = collect($db->select('SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = :database AND TABLE_NAME = :table', [
             'database' => $table['database'],
             'table' => $table['table'],
         ]))->map(function ($x) {
