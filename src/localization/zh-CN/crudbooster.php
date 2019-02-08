@@ -75,6 +75,7 @@ return [
     'alert_required' => '请确认正确填写所有必填字段',
     'alert_error_ajax' => '抱歉，确实有问题，我们会尽快修复它!',
     'alert_validation_error' => '请正确填写: :error',
+    'alert_login_validate_error' => '登录验证失败',
 
     'add_data_page_title' => ':module新增',
     'edit_data_page_title' => ':module编辑',

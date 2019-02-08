@@ -16,4 +16,9 @@ class CBHook extends Controller {
 	public function afterLogin() {
 		
 	}
+
+	public function validateLogin($email, $cmsUser){
+
+	    return true;
+    }
 }
