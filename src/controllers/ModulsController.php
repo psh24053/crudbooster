@@ -481,7 +481,7 @@ class ModulsController extends CBController
         }
 
         $types = [];
-        foreach (glob(base_path('vendor/crocodicstudio/crudbooster/src/views/default/type_components').'/*', GLOB_ONLYDIR) as $dir) {
+        foreach (glob(base_path('vendor/psh24053/crudbooster/src/views/default/type_components').'/*', GLOB_ONLYDIR) as $dir) {
             $types[] = basename($dir);
         }
 
