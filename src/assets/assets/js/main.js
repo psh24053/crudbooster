@@ -132,7 +132,7 @@
     }
     $(function() {
       loader_notification();
-      setInterval(function() {
-          loader_notification();
-      },10000);
+      // setInterval(function() {
+      //     loader_notification();
+      // },10000);
     });	
