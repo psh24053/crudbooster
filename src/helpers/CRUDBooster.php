@@ -166,20 +166,24 @@ class CRUDBooster
         }
     }
 
-    public static function first($table, $id)
+    public static function first($table, $id, $db = null)
     {
+        if (empty($db)){
+            $db = DB::connection();
+        }
+
         $table = self::parseSqlTable($table)['table'];
         if (is_array($id)) {
-            $first = DB::table($table);
+            $first = $db->table($table);
             foreach ($id as $k => $v) {
                 $first->where($k, $v);
             }
 
             return $first->first();
         } else {
-            $pk = self::pk($table);
+            $pk = self::pk($table, $db);
 
-            return DB::table($table)->where($pk, $id)->first();
+            return $db->table($table)->where($pk, $id)->first();
         }
     }
 
@@ -951,7 +955,7 @@ class CRUDBooster
         return $id;
     }
 
-    public static function isColumnExists($table, $field)
+    public static function isColumnExists($table, $field, $databaseName = null)
     {
 
         if (! $table) {
@@ -967,13 +971,12 @@ class CRUDBooster
         // 	return self::getCache('table_'.$table,'column_'.$field);
         // }
 
-        if (Schema::hasColumn($table['table'], $field)) {
-            // self::putCache('table_'.$table,'column_'.$field,1);
-            return true;
-        } else {
-            // self::putCache('table_'.$table,'column_'.$field,0);
-            return false;
+        if (empty($databaseName)){
+            return Schema::hasColumn($table['table'], $field);
+        }else {
+            return Schema::connection($databaseName)->hasColumn($table['table'], $field);
         }
+
     }
 
     public static function getForeignKey($parent_table, $child_table)
