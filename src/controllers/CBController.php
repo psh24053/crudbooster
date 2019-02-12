@@ -702,11 +702,15 @@ class CBController extends Controller
     {
         $table = Request::get('table');
         $label = Request::get('label');
+        $datatableJoins = urldecode(Request::get('datatable_joins'));
         $datatableWhere = urldecode(Request::get('datatable_where'));
         $foreign_key_name = Request::get('fk_name');
         $foreign_key_value = Request::get('fk_value');
         if ($table && $label && $foreign_key_name && $foreign_key_value) {
             $query = $this->db_conn->table($table);
+            if ($datatableJoins){
+                $query->join($this->db_conn->raw($datatableJoins));
+            }
             if ($datatableWhere) {
                 $query->whereRaw($datatableWhere);
             }
