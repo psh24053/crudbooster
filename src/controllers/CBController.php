@@ -708,8 +708,13 @@ class CBController extends Controller
         $foreign_key_value = Request::get('fk_value');
         if ($table && $label && $foreign_key_name && $foreign_key_value) {
             $query = $this->db_conn->table($table);
-            if ($datatableJoins){
-                $query->join($this->db_conn->raw($datatableJoins));
+            if (!empty($datatableJoins)){
+                $joins = json_decode($datatableJoins);
+                if (!empty($joins)){
+                    foreach ($joins as $join){
+                        $query->join(...$join);
+                    }
+                }
             }
             if ($datatableWhere) {
                 $query->whereRaw($datatableWhere);
@@ -790,6 +795,7 @@ class CBController extends Controller
         @$column3 = Request::get('column3');
 
         $where = Request::get('where');
+        $joins = urldecode(Request::get('joins'));
 
         $fk = Request::get('fk');
         $fk_value = Request::get('fk_value');
@@ -837,6 +843,16 @@ class CBController extends Controller
 
             if ($id) {
                 $rows->where($table1.".".$table1PK, $id);
+            }
+
+            if (!empty($joins)){
+                $joins = json_decode($joins);
+                if (!empty($joins)){
+                    foreach ($joins as $join){
+                        $query->join(...$join);
+                    }
+                }
+
             }
 
             if ($where) {
