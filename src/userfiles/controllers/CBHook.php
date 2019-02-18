@@ -17,6 +17,10 @@ class CBHook extends Controller {
 		
 	}
 
+    public function getLoginFilter($view){
+        return $view;
+    }
+
 	public function validateLogin($email, $cmsUser){
 
 	    return true;

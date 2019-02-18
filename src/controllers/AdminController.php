@@ -52,7 +52,8 @@ class AdminController extends CBController
             return redirect(CRUDBooster::adminPath());
         }
 
-        return view('crudbooster::login');
+        $cb_hook_session = new \App\Http\Controllers\CBHook;
+        return $cb_hook_session->getLoginFilter(view('crudbooster::login'));
     }
 
     public function postLogin()
