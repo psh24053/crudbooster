@@ -1100,26 +1100,26 @@ class CRUDBooster
 
     public static function getUrlParameters($exception = null)
     {
-        @$get = $_GET;
+//        @$get = $_GET;
         $inputhtml = '';
-
-        if ($get) {
+        $params = Request::all();
+        if ($params) {
 
             if (is_array($exception)) {
                 foreach ($exception as $e) {
-                    unset($get[$e]);
+                    unset($params[$e]);
                 }
             }
 
-            $string_parameters = http_build_query($get);
-            $string_parameters_array = explode('&', $string_parameters);
-            foreach ($string_parameters_array as $s) {
-                $part = explode('=', $s);
-                $name = urldecode($part[0]);
-                $value = urldecode($part[1]);
-                if ($name) {
-                    $inputhtml .= "<input type='hidden' name='$name' value='$value'/>\n";
-                }
+//            $string_parameters = http_build_query($get);
+//            $string_parameters_array = explode('&', $string_parameters);
+            foreach ($params as $key => $value) {
+//                $part = explode('=', $s);
+//                $name = urldecode($part[0]);
+//                $value = urldecode($part[1]);
+//                if ($name) {
+                $inputhtml .= "<input type='button' name='$key' value='".empty($value) ? '' : htmlspecialchars($value)."'/>\n";
+//                }
             }
         }
 
