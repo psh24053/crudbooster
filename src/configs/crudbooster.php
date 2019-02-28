@@ -2,6 +2,8 @@
 
 return [
 
+    'use_notification' => true,
+    'use_lock_screen' => true,
     'ADMIN_PATH' => 'admin',
 
     /*
