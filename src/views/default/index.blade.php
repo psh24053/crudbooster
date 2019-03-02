@@ -113,7 +113,7 @@
                 </form>
 
 
-                <form method='get' id='form-limit-paging' style="display:inline-block" action='{{Request::url()}}'>
+                <form method='get' id='form-limit-paging' style="display:inline-block" action='{{Request::fullUrl()}}'>
                     {!! CRUDBooster::getUrlParameters(['limit']) !!}
                     <div class="input-group">
                         <select onchange="$('#form-limit-paging').submit()" name='limit' style="width: 56px;" class='form-control input-sm'>
