@@ -1118,7 +1118,7 @@ class CRUDBooster
 //                $name = urldecode($part[0]);
 //                $value = urldecode($part[1]);
 //                if ($name) {
-                $inputhtml .= "<input type='hidden' name='$key' value='".(empty($value) ? '' : htmlspecialchars($value))."'/>\n";
+                $inputhtml .= "<input type='hidden' name='$key' value='".(empty($value) ? '' : (is_string($value) ? htmlspecialchars($value) : htmlspecialchars(json_encode($value))))."'/>\n";
 //                }
             }
         }
