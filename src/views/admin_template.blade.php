@@ -6,6 +6,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
     <meta name='generator' content='CRUDBooster 5.4.6'/>
     <meta name='robots' content='noindex,nofollow'/>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta content="always" name="referrer">
     <link rel="shortcut icon"
           href="{{ CRUDBooster::getSetting('favicon')?asset(CRUDBooster::getSetting('favicon')):asset('vendor/crudbooster/assets/logo_crudbooster.png') }}">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
